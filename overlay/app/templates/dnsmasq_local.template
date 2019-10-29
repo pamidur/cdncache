@@ -1,0 +1,5 @@
+interface=lo
+user=root
+no-hosts       
+no-resolv
+$servers
