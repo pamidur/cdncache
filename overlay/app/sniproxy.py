@@ -13,7 +13,8 @@ service_conf_template = "/app/templates/sniproxy.template"
 
 
 def setup():
-    os.system('supervisorctl stop %s' % service_name)
+    print("Configuring sniproxy")
+    stopService(service_name)
 
     mode = None
 
@@ -26,7 +27,8 @@ def setup():
     writeTemplated(service_conf_template, service_conf,
                    dict(nameserver=getLoopbackAddress(), mode=mode))
 
-    os.system('supervisorctl start %s' % service_name)
+    startService(service_name)
+    print("Sniproxy is Ready")
 
 
 if __name__ == '__main__':

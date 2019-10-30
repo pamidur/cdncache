@@ -1,4 +1,5 @@
 interface=lo
+bind-interfaces
 user=root
 no-hosts       
 no-resolv

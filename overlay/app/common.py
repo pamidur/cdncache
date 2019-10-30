@@ -64,6 +64,30 @@ def writeTemplated(template_path, target_path, values):
     target.close()
 
 
+class cd:
+    def __init__(self, newPath):
+        self.newPath = os.path.expanduser(newPath)
+
+    def __enter__(self):
+        self.savedPath = os.getcwd()
+        os.chdir(self.newPath)
+
+    def __exit__(self, etype, value, traceback):
+        os.chdir(self.savedPath)
+
+
+def stopService(service):
+    if (os.popen('supervisorctl pid %s' % service).read().rstrip() != "0"):
+        if (os.system('supervisorctl stop %s' % service) != 0):
+            sys.exit("Cannot stop service '%s'" % service)
+
+
+def startService(service):
+    if (os.popen('supervisorctl pid %s' % service).read().rstrip() == "0"):
+        if (os.system('supervisorctl start %s' % service) != 0):
+            sys.exit("Cannot start service '%s'" % service)
+
+
 ip4_enabled = checkIp4Enabled()
 ip6_enabled = checkIp6Enabled()
 

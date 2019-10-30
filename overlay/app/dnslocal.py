@@ -35,13 +35,14 @@ def configure_dnslocal(upstreams, dnslocalconf):
 
 
 def setup():
-    os.system('supervisorctl stop %s' % service_name)
+    print("Configuring local DNS")
+    stopService(service_name)
 
     configure_dnslocal(upstream_dns, service_conf)
     configure_resolv(resolv_conf)
 
-    os.system('supervisorctl start %s' % service_name)
-
+    startService(service_name)
+    print("Local DNS is Ready")
 
 if __name__ == '__main__':
     setup()

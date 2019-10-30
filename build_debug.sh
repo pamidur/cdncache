@@ -1,0 +1,1 @@
+docker build -t cdncache:latest . && docker run -d --name cdncache cdncache:latest && docker exec -it cdncache /bin/sh ; docker stop cdncache && docker rm cdncache

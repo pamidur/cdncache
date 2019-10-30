@@ -1,0 +1,8 @@
+interface=eth0
+except-interface=lo
+bind-interfaces
+user=root
+no-hosts       
+no-resolv
+addn-hosts=/etc/dnsmasq.d/
+$servers
