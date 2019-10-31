@@ -1,6 +1,6 @@
 import dnslocal
 import cdn_lists
-import cache
+import nginx
 import dnsmasq
 import sniproxy
 from common import *
@@ -20,7 +20,7 @@ if len(internal_ips) != 0:
 
 dnslocal.setup()
 cdn_lists.update()
-cache.setup()
+nginx.setup()
 sniproxy.setup()
 dnsmasq.setup()
 

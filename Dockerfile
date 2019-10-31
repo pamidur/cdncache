@@ -1,18 +1,24 @@
 FROM alpine:latest
 LABEL author="Oleksandr Hulyi <ohulyi@outlook.com>"
 
-ENV GIT_SOURCES="https://github.com/uklans/cache-domains"
-ENV UPSTREAM_DNS="1.1.1.1 8.8.8.8 2606:4700:4700::1111 2001:4860:4860::8888"
-ENV EXTERNAL_IPS="192.168.2.2"
+ENV \
+	GIT_SOURCES="https://github.com/uklans/cache-domains" \
+	UPSTREAM_DNS="1.1.1.1 8.8.8.8 2606:4700:4700::1111 2001:4860:4860::8888" \
+	EXTERNAL_IPS="" \
+	TZ="Europe/Paris"
 
 RUN	apk update && \
-	apk add --no-cache git dnsmasq sniproxy nginx supervisor nano
+	apk add --no-cache git dnsmasq sniproxy nginx supervisor
 
 RUN	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /var/cache/apk/* && \
 	rm -rf /etc/sniproxy && \
+	rm -rf /etc/nginx && \
+	rm -rf /etc/dnsmasq.conf && \
 	mkdir -p /data/sources && \
-	mkdir -p /data/cache
+	mkdir -p /data/logs && \
+	mkdir -p /data/cache && \
+	chmod -R 666 /data
 
 COPY overlay/ /
 

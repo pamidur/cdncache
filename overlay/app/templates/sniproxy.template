@@ -1,6 +1,6 @@
 user nobody
 
-pidfile /var/run/sniproxy/sniproxy.pid
+pidfile /run/sniproxy.pid
 
 resolver {
         nameserver $nameserver
