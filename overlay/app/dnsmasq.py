@@ -19,18 +19,32 @@ def _configure_hostfiles(hostsdir):
 
     hostmap = cdn_lists.getHostnames()
     ips = filter(__filterIpList, external_ips)
+    ipsstr = ""
+    for ip in ips: ipsstr += ",%s" % ip
 
     hostfiles = []
 
-    for group in hostmap.keys():
-        hostfilepath = os.path.join(_hosts_dir,group + ".hosts")
-        hostfile = open(hostfilepath, "w")
-        for name in hostmap[group]:
-            for ip in ips:
-                hostfile.write("%s\t%s\n" % (ip, name))
-        hostfile.close
-        hostfiles.append(hostfilepath)
-        print("Written hosts file for '%s'" % group)
+    for group in hostmap.keys(): 
+        names = hostmap[group]
+        if len(names) != 0:
+            
+            hostfilepath = os.path.join(_hosts_dir,group + ".hosts")
+            hostfile = open(hostfilepath, "w")  
+            host="%s.cdncache" % group
+
+            hostfile.write("auth-zone=%s\n" % host)
+            hostfile.write("host-record=%s%s\n" % (host, ipsstr))             
+
+            for name in names:
+                if name.startswith("*."):
+                    hostfile.write("auth-zone=%s\n" % name[2:])                  
+                    hostfile.write("cname=%s,%s\n" % (name,host))
+                else:
+                    hostfile.write("host-record=%s%s\n" % (name, ipsstr))  
+                
+            hostfile.close
+            hostfiles.append(hostfilepath)
+            print("Written hosts file for '%s'" % group)
     
     return hostfiles
 

@@ -6,5 +6,7 @@ no-hosts
 no-resolv
 no-poll
 local-ttl=3600
-addn-hosts=/etc/dnsmasq.d/
+auth-server=cdncache
+conf-dir=/etc/dnsmasq.d/
+
 $servers
