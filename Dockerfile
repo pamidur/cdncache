@@ -19,7 +19,8 @@ RUN	apk update && \
 	mkdir -p /data/sources && \
 	mkdir -p /data/logs && \
 	mkdir -p /data/cache && \
-	chmod -R 666 /data
+	chmod -R 666 /data && \
+	chown -R nobody:nobody /data
 
 COPY overlay/ /
 
