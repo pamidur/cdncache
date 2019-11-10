@@ -1,0 +1,4 @@
+listen-on { $listen4 };
+listen-on-v6 { $listen6 };
+forwarders { $forward };
+forward only;

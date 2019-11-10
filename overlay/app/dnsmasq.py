@@ -1,74 +1,48 @@
 import os
 import sys
-import cdn_lists
 from common import *
 
-_service_name = "dnsmasq"
+service_name = "dnsmasq"
 
-_hosts_dir = "/etc/dnsmasq.d/"
-_service_conf = "/etc/dnsmasq.conf"
-_service_conf_template = "/app/templates/dnsmasq.template"
+service_conf = "/etc/dnsmasq.conf"
+resolv_conf = "/etc/resolv.conf"
 
-def __filterIpList(ip):
-    if ip4_enabled and isIp4Address(ip): return True
-    if ip6_enabled and isIp6Address(ip): return True
-    return False
+service_conf_template = "/app/templates/dnsmasq.template"
+resolv_conf_template = "/app/templates/resolv.template"
 
-def _configure_hostfiles(hostsdir):
-    if(os.system("rm -rf %s*" % hostsdir)!=0): sys.exit("Cannot cleanup hostfiles dir")
 
-    hostmap = cdn_lists.getHostnames()
-    ips = filter(__filterIpList, external_ips)
-    ipsstr = ""
-    for ip in ips: ipsstr += ",%s" % ip
+def configure_resolv(resolveconf):
+    writeTemplated(resolv_conf_template, resolveconf,
+                   dict(nameserver=getLoopbackAddress()))
 
-    hostfiles = []
 
-    for group in hostmap.keys(): 
-        names = hostmap[group]
-        if len(names) != 0:
-            
-            hostfilepath = os.path.join(_hosts_dir,group + ".hosts")
-            hostfile = open(hostfilepath, "w")  
-            host="%s.cdncache" % group
+def configure_dnslocal(upstreams, dnslocalconf):
 
-            hostfile.write("auth-zone=%s\n" % host)
-            hostfile.write("host-record=%s%s\n" % (host, ipsstr))             
-
-            for name in names:
-                if name.startswith("*."):
-                    hostfile.write("auth-zone=%s\n" % name[2:])                  
-                    hostfile.write("cname=%s,%s\n" % (name,host))
-                else:
-                    hostfile.write("host-record=%s%s\n" % (name, ipsstr))  
-                
-            hostfile.close
-            hostfiles.append(hostfilepath)
-            print("Written hosts file for '%s'" % group)
-    
-    return hostfiles
-
-def _configure_dnsmasq(forwarddns, hostsfiles, serviceconf):
+    if (len(upstreams) == 0):
+        sys.exit("Upstream DNS are not defined")
 
     servers = ""
-    for upstream in forwarddns:
+    for upstream in upstreams:
         if (ip4_enabled and isIp4Address(upstream)):
             servers += "server=%s\n" % upstream
         if (ip6_enabled and isIp6Address(upstream)):
             servers += "server=%s\n" % upstream
 
-    writeTemplated(_service_conf_template, serviceconf, dict(servers=servers))
+    if (servers == ""):
+        sys.exit("Upstream DNS are not supported by current ip configuration")
+
+    writeTemplated(service_conf_template, dnslocalconf, dict(servers=servers))
 
 
 def setup():
-    print("Configuring external DNS")
-    stopService(_service_name)
+    print("Configuring local DNS")
+    stopService(service_name)
 
-    hostsfiles = _configure_hostfiles(_hosts_dir)
-    _configure_dnsmasq(forward_dns, hostsfiles, _service_conf)
+    configure_dnslocal(params.upstream_dns, service_conf)
+    configure_resolv(resolv_conf)
 
-    startService(_service_name)
-    print("Exterenal DNS is Ready")
+    startService(service_name)
+    print("Local DNS is Ready")
 
 if __name__ == '__main__':
     setup()

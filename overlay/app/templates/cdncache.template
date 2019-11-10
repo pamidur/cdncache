@@ -1,0 +1,11 @@
+$$ORIGIN cdncache.
+$$TTL    600
+@       IN  SOA localhost. cdncache. (
+             1573333868
+             604800
+             600
+             600
+             600 )
+@       IN  NS  localhost.
+
+$records

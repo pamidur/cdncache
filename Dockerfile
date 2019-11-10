@@ -8,13 +8,14 @@ ENV \
 	TZ="Europe/Paris"
 
 RUN	apk update && \
-	apk add --no-cache git dnsmasq sniproxy nginx supervisor
-
-RUN	rm -rf /var/lib/apt/lists/* && \
+	apk add --no-cache git dnsmasq sniproxy nginx supervisor bind && \
+	rm -rf /var/lib/apt/lists/* && \
 	rm -rf /var/cache/apk/* && \
 	rm -rf /etc/sniproxy && \
 	rm -rf /etc/nginx && \
+	rm -rf /etc/bind && \
 	rm -rf /etc/dnsmasq.conf && \
+	mkdir /var/cache/bind && \
 	mkdir -p /data/sources && \
 	mkdir -p /data/logs && \
 	mkdir -p /data/cache && \

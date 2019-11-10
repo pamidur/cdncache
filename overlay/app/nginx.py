@@ -5,8 +5,8 @@ from common import *
 
 _service_name = "nginx"
 
-_resolver_conf = "/etc/nginx.d/resolver.conf"
-_map_conf = "/etc/nginx.d/cachemap.conf"
+_resolver_conf = "/etc/nginx/resolver.conf"
+_map_conf = "/etc/nginx/cachemap.conf"
 
 
 def _configure_resolver(resolveconf):

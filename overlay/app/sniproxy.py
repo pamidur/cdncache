@@ -20,7 +20,7 @@ def setup():
 
     if (ip4_enabled and not ip6_enabled): mode = "ipv4_only"
     if (ip6_enabled and not ip4_enabled): mode = "ipv6_only"
-    if (ip4_enabled and ip6_enabled and prefer_ip6): mode = "ipv6_first"
+    if (ip4_enabled and ip6_enabled and params.prefer_ip6): mode = "ipv6_first"
     else:
         if (ip4_enabled and ip6_enabled): mode = "ipv4_first"
 

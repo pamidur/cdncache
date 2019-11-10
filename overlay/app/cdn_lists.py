@@ -5,7 +5,10 @@ from common import *
 sources_dir = "/data/sources/"
 
 __hostnames = None
-__filefilter = lambda x: x.endswith('.txt')
+
+
+def __filefilter(x): return x.endswith('.txt')
+
 
 def __getListOfFiles(dirName, filter):
     listOfFile = os.listdir(dirName)
@@ -17,17 +20,19 @@ def __getListOfFiles(dirName, filter):
         else:
             if(filter(fullPath)):
                 allFiles.append(fullPath)
-                
+
     return allFiles
 
-def getHostnames():   
+
+def getHostnames():
     global __hostnames
     if __hostnames is None:
         __hostnames = dict()
         sourcesfiles = __getListOfFiles(sources_dir, __filefilter)
         for sourcefilepath in sourcesfiles:
             sourcefile = open(sourcefilepath)
-            names = filter(lambda x: not x.startswith("#"), map(lambda x: x.strip(), sourcefile.readlines()))
+            names = filter(lambda x: not x.startswith("#"), map(
+                lambda x: x.strip(), sourcefile.readlines()))
             group = os.path.splitext(os.path.basename(sourcefilepath))[0]
             __hostnames[group] = names
             print("Read %s hostnames is group '%s'" % (len(names), group))
@@ -39,21 +44,24 @@ def update():
 
     __hostnames = None
 
-    if(len(git_sources) == 0): 
+    if(len(params.git_sources) == 0):
         print("No external sources defined. Using what is in '%s'" % sources_dir)
         getHostnames()
         return
 
     print("Updating CDNs hostnames sources")
 
-    if(os.system("rm -rf %s*" % sources_dir)!=0): sys.exit("Cannot cleanup sources dir")
-    
+    if(os.system("rm -rf %s*" % sources_dir) != 0):
+        sys.exit("Cannot cleanup sources dir")
+
     with cd(sources_dir):
-        for source in git_sources:  
-            print("Updating from %s" % source)      
-            if (os.system("git clone --depth 1 %s" % source) != 0): sys.exit("Failed getting sources from %s" % source)
+        for source in params.git_sources:
+            print("Updating from %s" % source)
+            if (os.system("git clone --depth 1 %s" % source) != 0):
+                sys.exit("Failed getting sources from %s" % source)
     getHostnames()
     print("CDNs hostnames sources are Updated")
+
 
 if __name__ == '__main__':
     update()

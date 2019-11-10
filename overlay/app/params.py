@@ -30,4 +30,4 @@ else:
 git_sources = os.environ.get('GIT_SOURCES', "")
 git_sources = git_sources.split()
 
-prefer_ip6 = os.environ.get('PREFER_IP6', True)
+prefer_ip6 = bool(os.environ.get('PREFER_IP6', 'True'))

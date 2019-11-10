@@ -1,5 +1,6 @@
 import os
-from params import *
+import params
+import sys
 from string import Template
 
 
@@ -38,7 +39,7 @@ def getIpAddress(interface, atype):
 
 
 def getLoopbackAddress():
-    if (prefer_ip6):
+    if (params.prefer_ip6):
         addrs = getIp6Address("lo")
         if (len(addrs) == 0):
             addrs = getIp4Address("lo")

@@ -1,12 +1,6 @@
-interface=eth0
-except-interface=lo
+interface=lo
 bind-interfaces
 user=root
 no-hosts       
 no-resolv
-no-poll
-local-ttl=3600
-auth-server=cdncache
-conf-dir=/etc/dnsmasq.d/
-
 $servers
