@@ -53,10 +53,13 @@ def _configure_named(forwarddns, serviceconf):
 
     forwarders = ""
     for upstream in forwarddns:
-        if (ip4_enabled and isIp4Address(upstream)):
-            forwarders += "%s; " % upstream
-        if (ip6_enabled and isIp6Address(upstream)):
-            forwarders += "%s; " % upstream
+        ip_parts = upstream.split('#')
+        ip = ip_parts[0]
+        port = "53" if(len(ip_parts) == 1) else ip_parts[1]
+        if (ip4_enabled and isIp4Address(ip)):
+            forwarders += "%s port %s; " % (ip, port)
+        if (ip6_enabled and isIp6Address(ip)):
+            forwarders += "%s port %s; " % (ip, port)
 
     if ip4_enabled:
         listen4 = ""

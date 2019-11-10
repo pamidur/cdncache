@@ -23,9 +23,10 @@ def configure_dnslocal(upstreams, dnslocalconf):
 
     servers = ""
     for upstream in upstreams:
-        if (ip4_enabled and isIp4Address(upstream)):
+        ip_plain = upstream.split('#')[0]
+        if (ip4_enabled and isIp4Address(ip_plain)):
             servers += "server=%s\n" % upstream
-        if (ip6_enabled and isIp6Address(upstream)):
+        if (ip6_enabled and isIp6Address(ip_plain)):
             servers += "server=%s\n" % upstream
 
     if (servers == ""):
